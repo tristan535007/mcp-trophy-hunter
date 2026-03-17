@@ -14,24 +14,55 @@ MCP server for PlayStation trophy hunting. Gives Claude access to your PSN data 
 
 ## Installation
 
+### Option 1 — mcpize.com (recommended, no setup)
+
 Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "trophy-hunter": {
-      "command": "npx",
-      "args": ["-y", "@pavlo-skuibida/mcp-trophy-hunter"]
+      "type": "sse",
+      "url": "https://psn-trophy-hunter.mcpize.run"
     }
   }
 }
 ```
 
+No Node.js required. The server runs on mcpize infrastructure — free, direct access, no signup.
+
+### Option 2 — Self-hosted via npm
+
+Install globally first:
+
+```bash
+npm install -g @pavlo-skuibida/mcp-trophy-hunter
+```
+
+Then add to Claude Desktop config using the full path to your Node.js binary:
+
+```bash
+which node   # copy this path
+```
+
+```json
+{
+  "mcpServers": {
+    "trophy-hunter": {
+      "command": "/full/path/to/node",
+      "args": ["/full/path/to/node_modules/@pavlo-skuibida/mcp-trophy-hunter/dist/index.js"]
+    }
+  }
+}
+```
+
+> **Note for nvm users:** Claude Desktop does not inherit your shell PATH, so `npx` or `node` without a full path will fail. Always use the absolute path from `which node`.
+
 Then restart Claude Desktop.
 
 ## First-time Setup
 
-You need to authenticate with PSN once:
+You need to authenticate with PSN once per session (mcpize) or once every ~2 months (self-hosted):
 
 1. **Open this URL in your browser** (must be logged in to PSN):
    ```
@@ -48,7 +79,7 @@ You need to authenticate with PSN once:
    setup_psn 4ab6c...your-token...
    ```
 
-Tokens are saved locally in `~/.trophy-hunter/credentials.json` and auto-refreshed. You'll need to repeat this roughly every 2 months when the refresh token expires.
+When self-hosting, tokens are saved to `~/.trophy-hunter/credentials.json` and auto-refreshed.
 
 ## Usage Examples
 
