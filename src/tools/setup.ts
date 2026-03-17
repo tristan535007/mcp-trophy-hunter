@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { setupFromNpsso, loadCredentials } from "../clients/psn.js";
+import { setupFromNpsso, getStoredCredentials } from "../clients/psn.js";
 
 export function registerSetupTool(server: McpServer): void {
   server.tool(
@@ -22,7 +22,7 @@ export function registerSetupTool(server: McpServer): void {
           content: [
             {
               type: "text",
-              text: "PSN authentication successful. Tokens saved locally to ~/.trophy-hunter/credentials.json.\n\nYou can now use get_platinum_roadmap and find_easy_platinums.",
+              text: "PSN authentication successful. You can now use get_my_games, get_trophy_list, and suggest_next_trophy.",
             },
           ],
         };
@@ -47,7 +47,7 @@ export function registerSetupTool(server: McpServer): void {
     "Check if PSN authentication is set up and working.",
     {},
     async () => {
-      const creds = loadCredentials();
+      const creds = getStoredCredentials();
       if (!creds) {
         return {
           content: [

@@ -19,6 +19,10 @@ interface Credentials {
   expiresAt: number; // unix ms
 }
 
+// In-memory cache for multi-user cloud isolation.
+// Each mcp-proxy process is per-user, so this is safe.
+let sessionCredentials: Credentials | null = null;
+
 export function saveCredentials(creds: Credentials): void {
   if (!existsSync(CREDENTIALS_DIR)) {
     mkdirSync(CREDENTIALS_DIR, { recursive: true });
@@ -38,15 +42,22 @@ export function loadCredentials(): Credentials | null {
 export async function setupFromNpsso(npsso: string): Promise<void> {
   const accessCode = await exchangeNpssoForAccessCode(npsso);
   const tokens = await exchangeAccessCodeForAuthTokens(accessCode);
-  saveCredentials({
+  const creds: Credentials = {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     expiresAt: Date.now() + tokens.expiresIn * 1000,
-  });
+  };
+  sessionCredentials = creds;
+  saveCredentials(creds);
+}
+
+// Returns in-memory session credentials first, then falls back to file.
+export function getStoredCredentials(): Credentials | null {
+  return sessionCredentials ?? loadCredentials();
 }
 
 export async function getAccessToken(): Promise<string> {
-  const creds = loadCredentials();
+  const creds = sessionCredentials ?? loadCredentials();
   if (!creds) {
     throw new Error(
       "Not authenticated. Run setup_psn first:\n" +
@@ -64,10 +75,12 @@ export async function getAccessToken(): Promise<string> {
       refreshToken: refreshed.refreshToken,
       expiresAt: Date.now() + refreshed.expiresIn * 1000,
     };
+    sessionCredentials = updated;
     saveCredentials(updated);
     return updated.accessToken;
   }
 
+  sessionCredentials = creds; // cache after first file read
   return creds.accessToken;
 }
 

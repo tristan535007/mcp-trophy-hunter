@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "mcp-trophy-hunter": "./dist/index.js"
+    "mcp-trophy-hunter": "dist/index.js"
   },
   "files": [
     "dist"
