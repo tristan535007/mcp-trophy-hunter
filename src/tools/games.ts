@@ -6,9 +6,9 @@ function remaining(g: GameInfo): string {
   const silver = g.definedTrophies.silver - g.earnedTrophies.silver;
   const bronze = g.definedTrophies.bronze - g.earnedTrophies.bronze;
   const parts: string[] = [];
-  if (gold > 0) parts.push(`${gold}G`);
-  if (silver > 0) parts.push(`${silver}S`);
-  if (bronze > 0) parts.push(`${bronze}B`);
+  if (gold > 0) parts.push(`${gold}🥇`);
+  if (silver > 0) parts.push(`${silver}🥈`);
+  if (bronze > 0) parts.push(`${bronze}🥉`);
   return parts.length > 0 ? parts.join(" · ") : "—";
 }
 
