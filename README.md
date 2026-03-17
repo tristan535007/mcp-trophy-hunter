@@ -16,20 +16,11 @@ MCP server for PlayStation trophy hunting. Gives Claude access to your PSN data 
 
 ### Option 1 — mcpize.com (recommended, no setup)
 
-Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Connect via the mcpize.com marketplace — no Node.js, no config file editing required:
 
-```json
-{
-  "mcpServers": {
-    "trophy-hunter": {
-      "type": "sse",
-      "url": "https://psn-trophy-hunter.mcpize.run"
-    }
-  }
-}
-```
+👉 [psn-trophy-hunter on mcpize.com](https://mcpize.com/mcp/psn-trophy-hunter)
 
-No Node.js required. The server runs on mcpize infrastructure — free, direct access, no signup.
+The server runs on mcpize infrastructure — free, direct access, no signup.
 
 ### Option 2 — Self-hosted via npm
 
