@@ -181,24 +181,35 @@ function toGameInfo(t: any): GameInfo {
   };
 }
 
-export async function searchUserGame(title: string): Promise<GameInfo | null> {
-  const accessToken = await getAccessToken();
-  const auth = { accessToken };
+// Titles cache: avoids fetching 800 titles on every tool call.
+// TTL 5 min covers back-to-back calls in a session (get_my_games → suggest_next_trophy).
+const TITLES_CACHE_TTL_MS = 5 * 60 * 1000;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let titlesCache: { titles: any[]; expiresAt: number } | null = null;
 
-  const response = await getUserTitles(auth, "me", { limit: 800 });
-  const found = response.trophyTitles?.find((t) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getAllTitles(): Promise<any[]> {
+  if (titlesCache && Date.now() < titlesCache.expiresAt) {
+    return titlesCache.titles;
+  }
+  const accessToken = await getAccessToken();
+  const response = await getUserTitles({ accessToken }, "me", { limit: 800 });
+  const titles = response.trophyTitles ?? [];
+  titlesCache = { titles, expiresAt: Date.now() + TITLES_CACHE_TTL_MS };
+  return titles;
+}
+
+export async function searchUserGame(title: string): Promise<GameInfo | null> {
+  const titles = await getAllTitles();
+  const found = titles.find((t) =>
     t.trophyTitleName?.toLowerCase().includes(title.toLowerCase())
   );
-
   return found ? toGameInfo(found) : null;
 }
 
 export async function getTopGames(limit: number): Promise<GameInfo[]> {
-  const accessToken = await getAccessToken();
-  const auth = { accessToken };
-
-  const response = await getUserTitles(auth, "me", { limit: 800 });
-  return (response.trophyTitles ?? [])
+  const titles = await getAllTitles();
+  return titles
     .filter((t) => t.progress < 100)
     .sort((a, b) => b.progress - a.progress)
     .slice(0, limit)
