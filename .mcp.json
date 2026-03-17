@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "trophy-hunter": {
+      "command": "node",
+      "args": ["./dist/index.js"]
+    }
+  }
+}
