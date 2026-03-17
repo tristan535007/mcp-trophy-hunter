@@ -1,0 +1,21 @@
+# MCPize Configuration
+# Docs: https://mcpize.com/docs/mcpize-yaml
+
+version: 1
+
+name: "PSN Trophy Hunter"
+slug: "psn-trophy-hunter"
+
+runtime: typescript
+entry: "src/index.ts"
+
+build:
+  install: "npm install"
+  command: "npm install && npm run build"
+
+start:
+  type: stdio
+  command: "npx @pavlo-skuibida/mcp-trophy-hunter"
+
+bridge:
+  mode: stdio
