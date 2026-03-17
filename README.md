@@ -1,4 +1,5 @@
 # mcp-trophy-hunter
+[![MCPize](https://mcpize.com/badge/@pavlos/psn-trophy-hunter)](https://mcpize.com/mcp/psn-trophy-hunter)
 
 MCP server for PlayStation trophy hunting. Gives Claude access to your PSN data — games closest to platinum, full trophy lists with rarity, and personalized next-step suggestions.
 
@@ -28,6 +29,16 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 ```
 
 Then restart Claude Desktop.
+
+## Connect via MCPize
+
+Use this MCP server instantly with no local installation:
+
+```bash
+npx -y mcpize connect @pavlos/psn-trophy-hunter --client claude
+```
+
+Or connect at: **https://mcpize.com/mcp/psn-trophy-hunter**
 
 ## First-time Setup
 
