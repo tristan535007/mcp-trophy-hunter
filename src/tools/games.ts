@@ -41,6 +41,8 @@ export function registerGamesTool(server: McpServer): void {
       });
 
       const text = [
+        "IMPORTANT: Render this entire table verbatim. Do not summarize, shorten, or omit any rows.",
+        "",
         "## My Games — Closest to Platinum",
         "",
         "| Game | Platform | Progress | Remaining |",
